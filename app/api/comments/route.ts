@@ -1,5 +1,6 @@
 import supabase from "@/server/database/client";
-import { DEFAULT_OBJECT_ID, ReviewStatus } from "@/utilities/constants";
+import { ReviewStatus } from "@/server/database/types";
+import { DEFAULT_OBJECT_ID } from "@/utilities/constants";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest, res: NextResponse) {
