@@ -7,7 +7,6 @@ import { Comment, ReviewStatus } from "@/server/database/types";
 export default function CommentPanel() {
   const [comments, setComments] = useState<string>("");
   const [reviewComments, setReviewComments] = useState<Comment[]>([]);
-  const [isReviewListOpen, setIsReviewListOpen] = useState<boolean>(false);
 
   const ApprovedIndicator = (
     <span className="h-2 w-2 p-2 rounded-full bg-green-500">✓ Approved</span>
@@ -99,7 +98,7 @@ export default function CommentPanel() {
 
   return (
     <div className="bg-gray-100 p-4 w-150 rounded shadow-lg">
-      {isReviewListOpen ? (
+      {reviewComments.length ? (
         <div className="mb-4 overflow-y-auto max-h-32">
           <h3 className="text-md font-semibold mb-2">Review Comments</h3>
           {reviewComments.map((comment) => (
@@ -113,11 +112,12 @@ export default function CommentPanel() {
                       ? PendingIndicator
                       : RejectedIndicator}
                 </p>
-                <div className="flex justify-start gap-2">
-                  <button
-                    className="mr-2 bg-green-500 text-white px-2 py-1 rounded hover:bg-green-600"
-                    onClick={() => handleApproveComments(comment.id)}
-                  >
+                {comment.status === ReviewStatus.PENDING && (
+                  <div className="flex justify-start gap-2">
+                    <button
+                      className="mr-2 bg-green-500 text-white px-2 py-1 rounded hover:bg-green-600"
+                      onClick={() => handleApproveComments(comment.id)}
+                    >
                     Approve
                   </button>
                   <button
@@ -127,15 +127,10 @@ export default function CommentPanel() {
                     Reject
                   </button>
                 </div>
+                )}
               </div>
             </div>
           ))}
-          <button
-            className="mt-2 bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
-            onClick={() => setIsReviewListOpen(false)}
-          >
-            Back
-          </button>
         </div>
       ) : (
         <div className="mb-4">
@@ -151,12 +146,6 @@ export default function CommentPanel() {
             onClick={handleSubmit}
           >
             Submit
-          </button>
-          <button
-            className="mt-2 ml-2 bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
-            onClick={() => setIsReviewListOpen(true)}
-          >
-            Review Comments
           </button>
         </div>
       )}
